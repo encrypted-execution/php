@@ -28,7 +28,7 @@ if ($is_snip ) {
 }
 
 
-echo "Polyscript from dir " . $root_path . " to dir:" . $out, PHP_EOL;
+echo "Polyscript " . $root_path . " to " . $out, PHP_EOL;
 
 if (!is_dir($out))
 {
