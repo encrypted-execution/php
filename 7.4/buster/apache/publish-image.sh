@@ -17,9 +17,9 @@ docker build -t $image:$headsha .
 docker tag $image:$headsha $image:latest
 
 if [[ "$1" == "-p" ]]; then
-    echo "Pushing as latest tag..."
-    docker push $image:$headsha
-    docker push $image:latest
+	echo "Pushing as latest tag..."
+	docker push $image:$headsha
+	docker push $image:latest
 fi
 
 if [[ "$1" == "-g" ]]; then

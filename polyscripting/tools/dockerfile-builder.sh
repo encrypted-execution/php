@@ -14,7 +14,8 @@ fi
 line="FROM polyverse/php-polyscripting-builder:$headsha as builder"
 pattern="FROM polyverse\/php-polyscripting-builder:$headsha as builder"
 
-enable=$(cat <<-'Message'
+enable=$(
+    cat <<-'Message'
 
 #add polyscripting
 ENV POLYSCRIPT_PATH "/usr/local/bin/polyscripting"
@@ -24,7 +25,7 @@ COPY --from=builder /polyscripting/ ./
 Message
 )
 
-if grep -qF 'FROM polyverse/php-polyscripting-builder' $dockerfile  ; then
+if grep -qF 'FROM polyverse/php-polyscripting-builder' $dockerfile; then
     if grep -qF "${line}" $dockerfile; then
         echo "dockerfile already enables polyscripting."
         exit 0
@@ -37,17 +38,15 @@ fi
 echo "No polyscritping builder found, adding polyscripting to Dockerfile"
 
 flag="COPY docker-php-source \/usr\/local\/bin\/"
-echo "FROM polyverse/php-polyscripting-builder:$headsha as builder" > temp.txt
-sed "/${flag}/q" $dockerfile >> temp.txt
-echo "$enable" >> temp.txt
+echo "FROM polyverse/php-polyscripting-builder:$headsha as builder" >temp.txt
+sed "/${flag}/q" $dockerfile >>temp.txt
+echo "$enable" >>temp.txt
 grep -v -e 'make -j "$(nproc)";' \
-        -e 'make clean;' \
-        -e 'docker-php-source delete;' \
-        -e 'find -type f -name' \
-	-e 'apt-get purge -y --auto-remove' \
-        <(sed -e 's#make install;#\${POLYSCRIPT_PATH}/polyscript-enable#' \
-        <(awk "f;/${flag}/{f=1}" $dockerfile)) >> temp.txt
+    -e 'make clean;' \
+    -e 'docker-php-source delete;' \
+    -e 'find -type f -name' \
+    -e 'apt-get purge -y --auto-remove' \
+    <(sed -e 's#make install;#\${POLYSCRIPT_PATH}/polyscript-enable#' \
+        <(awk "f;/${flag}/{f=1}" $dockerfile)) >>temp.txt
 
 mv temp.txt $dockerfile
-
-

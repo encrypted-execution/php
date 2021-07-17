@@ -2,11 +2,11 @@
 # Copyright (c) 2020 Polyverse Corporation
 
 if [ ! -v PHP_EXEC ]; then
-	PHP_EXEC=/usr/local/bin
+     PHP_EXEC=/usr/local/bin
 fi
 
 if [ ! -v POLYSCRIPT_PATH ]; then
-	POLYSCRIPT_PATH=/usr/local/bin/polyscripting
+     POLYSCRIPT_PATH=/usr/local/bin/polyscripting
 fi
 
 if [ ! -f "${PHP_EXEC}/s_php" ]; then
@@ -39,4 +39,6 @@ else
      echo "NO SUCH FILE at scramble time: $PHP_SRC_PATH/ext/phar/phar.php"
 fi
 
-cd $PHP_SRC_PATH; make -j 1 -o ext/phar/phar.php install -k; cd $POLYSCRIPT_PATH;
+cd $PHP_SRC_PATH
+make -j 1 -o ext/phar/phar.php install -k
+cd $POLYSCRIPT_PATH
