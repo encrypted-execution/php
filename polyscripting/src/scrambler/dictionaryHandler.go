@@ -106,8 +106,8 @@ var CharMatches = []string{}
 
 var CharStrRegex = regexp.MustCompile("(\")[^\\w\"]{2,}[ \"]")
 
-var symbolChars = [...]string{"(", "-", "~", "^", "&", "@", "!", "|", "+", ":", "=", ",", "%", "]"}
-var specialChars = []string{"(", "]"}
+var symbolChars = [...]string{"-", "~", "^", "&", "@", "!", "|", "+", ":", "=", ",", "%", "]"}
+var specialChars = []string{"]"}
 
 func shuffle() []string {
 	r := rand.New(rand.NewSource(time.Now().Unix()))
