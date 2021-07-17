@@ -147,7 +147,7 @@ func substituteWordsInString(line string) string {
 		line = strings.Replace(line, strings.TrimPrefix(matchedRegex, "\""), key, 1)
 		matchedRegex = KeywordsRegex.FindString(line)
 
-		if (matchedRegex == matchedRegexStart) {
+		if matchedRegex == matchedRegexStart {
 			fmt.Println(matchedRegex + ": Not added to dictionary.")
 			return line
 		}
