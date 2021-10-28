@@ -106,8 +106,8 @@ var CharMatches = []string{}
 
 var CharStrRegex = regexp.MustCompile("(\")[^\\w\"]{2,}[ \"]")
 
-var symbolChars = [...]string{"-", "~", "^", "&", "@", "!", "|", "+", ":", "=", ",", "%"}
-var specialChars = []string{}
+var symbolChars = [...]string{"(", ")", "]", "-", "~", "^", "&", "@", "!", "|", "+", ":", "=", ",", "%"}
+var specialChars = []string{"(", ")", "]"}
 
 func shuffle() []string {
 	r := rand.New(rand.NewSource(time.Now().Unix()))
@@ -122,7 +122,7 @@ func shuffle() []string {
 func InitChar() {
 	// create Char Matchers
 	addCharMatches(specialChars, []string{"\"", "'"})
-	addCharMatches([]string{"~", "-", "^", "&", "+", "|", "@", "!", ":", "=", ",", "%"}, []string{"'"})
+	addCharMatches([]string{"-", "~", "^", "&", "@", "!", "|", "+", ":", "=", ",", "%"}, []string{"'"})
 
 	if !PreMadeDict {
 		permutationGen()
@@ -135,17 +135,6 @@ func InitChar() {
 		}
 		SpecialChar[char] = out
 	}
-
-	//TODO:
-	//'[' ... creates an issue within strings. Any variable within a string that is followed by the scrambled
-	//			char, will throw an error. Both '[' and '-' have this issue, but because of how '[' is tokenized,
-	//			scrambling becomes an issue.
-	//'.' Creates issue with decimal numbers
-	// '>' '<' '?' create issues with open and close tags
-	// '$' creates issues with variables
-	// '/' and '*' crete issues with comments.
-	// dealing with coded formats requires changes to the lex,yacc files and extending php library. May be doable, but
-	// would take some time.
 }
 
 func addCharMatches(matches []string, wrappers []string) {
@@ -168,3 +157,14 @@ func permutationGen() {
 	}
 	return
 }
+
+//TODO:
+//'[' ... creates an issue within strings. Any variable within a string that is followed by the scrambled
+//			char, will throw an error. Both '[' and '-' have this issue, but because of how '[' is tokenized,
+//			scrambling becomes an issue.
+//'.' Creates issue with decimal numbers
+// '>' '<' '?' create issues with open and close tags
+// '$' creates issues with variables
+// '/' and '*' crete issues with comments.
+// dealing with coded formats requires changes to the lex,yacc files and extending php library. May be doable, but
+// would take some time.

@@ -4,7 +4,7 @@
  */
 
 include 'snip-transform.php';
-const LONG_OPTS = array("replace", "test", "dump", "phar", "inc", "dictionary:", "memory_limit::");
+$long_opts = array("replace", "test", "dump", "phar", "inc", "dictionary:", "memory_limit::");
 
 set_error_handler("error_handle", E_USER_ERROR);
 
@@ -20,7 +20,7 @@ $dictionary_path=null;
 
 
 
-arg_parse(getopt("s:p:d:", LONG_OPTS));
+arg_parse(getopt("s:p:d:", $long_opts));
 
 if ($is_snip ) {
     echo poly_snip($out, $is_test, $dictionary_path);
