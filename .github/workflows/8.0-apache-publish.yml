@@ -40,8 +40,9 @@ jobs:
         working-directory: ./8.0/buster/apache/
       - name: Trigger Downstream
         run: |
-             curl -X POST https://api.github.com/repos/polyverse/polyscripted-wordpress/dispatches \
-             -H 'Accept: application/vnd.github.everest-preview+json' \
-             -u ${{ secrets.GHCR_POLYSCRIPTING_SECRET }}  \
-             --data '{"event_type" : "build_8.0_apache", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+             curl \
+             -X POST \
+             -H 'Accept: application/vnd.github.v3+json' \
+             https://api.github.com/repos/polyverse/polyscripted-wordpress/dispatches \
+             -d '{"event_type" : "build_8.0_apache", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
         
