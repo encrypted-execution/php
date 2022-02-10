@@ -3,11 +3,9 @@
 package main
 
 import (
-	"math/rand"
-	"time"
+	"crypto/rand"
+	"math/big"
 )
-
-var randSrc = rand.NewSource(time.Now().UnixNano())
 
 const MAX = 15
 const MIN = 6
@@ -21,7 +19,10 @@ const (
 )
 
 func randomStringGen() string {
-	n := rand.Intn(MAX-MIN) + MIN
+	bigMin := big.NewInt(MIN)
+	bigMax := big.NewInt(MAX)
+	randRage := bigMax.Sub(bigMin)
+	n := rand.Int(rand.Reader, randRage) + bigMin
 	b := make([]byte, n)
 	for i, cache, remain := n-1, randSrc.Int63(), letterIdxMax; i >= 0; {
 		if remain == 0 {
