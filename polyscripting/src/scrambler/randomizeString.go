@@ -52,7 +52,7 @@ func cryptoRandInRangeInt64(min int64, max int64) int64 {
 	randRange.Sub(bigMax, bigMin)
 	randNumInRange, err := rand.Int(rand.Reader, &randRange)
 	if err != nil {
-		log.Fatalf("Unable to generate a cryptographically secure random number: %v")
+		log.Fatalf("Unable to generate a cryptographically secure random number: %v", err)
 	}
 
 	var randNum big.Int
