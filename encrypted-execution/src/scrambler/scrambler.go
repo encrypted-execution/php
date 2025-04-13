@@ -34,7 +34,7 @@ func init() {
 	charScram := *charFlag
 	KeywordsRegex.Longest()
 	if dictFile != "" {
-		InitPolyWords(dictFile)
+		InitEEWords(dictFile)
 	} else if charScram {
 		InitChar()
 	}
@@ -140,7 +140,7 @@ func substituteWordsInString(line string) string {
 		if _, ok := GetScrambled(key); ok || PreMadeDict {
 			key, _ = GetScrambled(key)
 		} else {
-			AddToPolyWords(strings.ToLower(key))
+			AddToEEWords(strings.ToLower(key))
 			key, _ = GetScrambled(strings.ToLower(key))
 		}
 

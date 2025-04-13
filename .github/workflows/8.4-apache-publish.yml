@@ -5,7 +5,9 @@ on:
      types:
       - completed
     push:
-     paths:
+      branches:
+        - main
+      paths:
       - '8.4/bookworm/apache/**'
       - '.github/workflows/8.4-apache-publish.yml'
 jobs:
