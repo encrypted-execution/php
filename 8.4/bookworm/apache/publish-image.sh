@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 # Copyright (c) 2020 Polyverse Corporation
 
 PHP_VERSION=8.4
@@ -10,9 +10,11 @@ headsha=$(git rev-parse --verify HEAD)
 
 
 docker build -t $image:$headsha .
+echo "Pushing with commit tag..."
 docker push $image:$headsha
 
-if [[ "$1" == "-p" ]]; then
+if [[ "$1" == "-g" ]]; then
+
     echo "Pushing as latest tag..."
     docker tag $image:$headsha $image:latest
     docker push $image:latest

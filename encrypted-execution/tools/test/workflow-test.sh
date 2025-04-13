@@ -7,8 +7,9 @@ git_root=`git rev-parse --show-toplevel`
 trap "docker stop $container" EXIT 
 echo $image
 
+echo "Pulling test image..."
 echo "Running image"
-docker run --rm --name "$container" -tid "$image:latest" bash
+docker run --rm --name "$container" -tid "$image:$git_root" bash
 docker exec -w $encrypted_execution_dir $container $encrypted_execution_dir/build-scrambled.sh
 echo "copying test"
 docker cp $git_root/encrypted-execution/tools/test/ $container:$encrypted_execution_dir
