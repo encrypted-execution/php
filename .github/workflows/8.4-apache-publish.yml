@@ -1,4 +1,4 @@
-name: Publish 8.4 Apache
+name: Publish 8.4 Apache on Debian Bookworm
 on:
     workflow_run: 
      workflows: ["Publish Encrypted Execution Tools"]
@@ -14,6 +14,9 @@ jobs:
     build:
       if: ${{ github.event_name == 'push' || github.event.workflow_run.conclusion == 'success' }}            
       runs-on: ubuntu-latest
+      permissions:
+        contents: read
+        packages: write
       steps:
       - name: Checkout
         uses: actions/checkout@v1
@@ -27,16 +30,16 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_PUBLISH_PERSONAL_ACCESS_TOKEN }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish 8.4 Apache Git Package Repository
-        run: ./publish-image.sh -g
+        run: ./publish-image.sh -p
         shell: bash
         working-directory: ./8.4/bookworm/apache/
-      - name: Trigger Downstream
-        run: |
-             curl \
-             -X POST \
-             -H 'Accept: application/vnd.github.v3+json' \
-             https://api.github.com/repos/encrypted-execution/encrypted-execution-wordpress/dispatches \
-             -d '{"event_type" : "build_8.4_apache", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
+#      - name: Trigger Downstream
+#        run: |
+#             curl \
+#             -X POST \
+#             -H 'Accept: application/vnd.github.v3+json' \
+#             https://api.github.com/repos/encrypted-execution/encrypted-execution-wordpress/dispatches \
+#             -d '{"event_type" : "build_8.4_apache", "client_payload": { "repository": "'"$GITHUB_REPOSITORY"'" }}'
         
