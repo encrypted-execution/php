@@ -11,7 +11,7 @@ This is a fork of the Docker PHP demonstrating how [Encrypted Execution](https:/
 
 To just kick the tires:
 ```
-docker run -it -p 8080:80 -v ./php-test-site:/var/www ghcr.io/encrypted-execution/php-8.4--apache-debian  
+docker run --rm -v ./encrypted-execution/tools/test/php-test-site:/var/www/html -p 8080:80 -it ghcr.io/encrypted-execution/encrypted-php8.4-apache-debian:9e175e7410bd7f2eafaa18b750220c15db0d0502  
 ```
 
 More documentation coming soon.

@@ -6,7 +6,7 @@ if [ ! -v PHP_EXEC ]; then
 fi
 
 if [ ! -v $ENCRYPTED_EXECUTION_PATH ]; then
-     $ENCRYPTED_EXECUTION_PATH=/usr/local/bin/encrypted-execution
+     ENCRYPTED_EXECUTION_PATH=/usr/local/bin/encrypted-execution
 fi
 
 if [ ! -f "${PHP_EXEC}/s_php" ]; then
@@ -31,7 +31,7 @@ else
 fi
 
 if [ -f $PHP_SRC_PATH/ext/phar/build_precommand.php ]; then
-     # Scramble the phar.php file so it compiles with the new PHP
+     # Scramble the build_precommand.php file so it compiles with the new PHP
      cp $PHP_SRC_PATH/ext/phar/build_precommand.php .
      $PHP_EXEC/s_php tok-php-transformer.php -p ./build_precommand.php --replace
      mv ./build_precommand.php $PHP_SRC_PATH/ext/phar/build_precommand.php
