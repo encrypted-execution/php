@@ -1,3 +1,5 @@
+FROM ghcr.io/encrypted-execution/php-encrypted-execution-builder:latest as builder
+
 #
 # NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
 #
@@ -108,6 +110,10 @@ RUN { \
 	} | tee "$APACHE_CONFDIR/conf-available/docker-php.conf" \
 	&& a2enconf docker-php
 
+
+ENV PHP_EXTRA_BUILD_DEPS apache2-dev
+ENV PHP_EXTRA_CONFIGURE_ARGS --with-apxs2 --disable-cgi PHP_EXTRA_VERSION="-encrypted"
+
 # Apply stack smash protection to functions using local buffers and alloca()
 # Make PHP's main executable position-independent (improves ASLR security mechanism, and has no performance impact on x86_64)
 # Enable optimization (-O2)
@@ -120,7 +126,7 @@ ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
 ENV GPG_KEYS AFD8691FDAEDF03BDF6E460563F15A9B715376CA 9D7F99A0CB8F05C8A6958D6256A97AF7600A39A6 0616E93D95AF471243E26761770426E17EBBB3DD
 
-ENV PHP_VERSION 8.4.6
+ENV PHP_VERSION 8.4.6-encrypted
 ENV PHP_URL="https://www.php.net/distributions/php-8.4.6.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-8.4.6.tar.xz.asc"
 ENV PHP_SHA256="089b08a5efef02313483325f3bacd8c4fe311cf1e1e56749d5cc7d059e225631"
 
@@ -157,6 +163,12 @@ RUN set -eux; \
 
 COPY docker-php-source /usr/local/bin/
 
+#add encryption
+ENV ENCRYPTED_EXECUTION_PATH "/usr/local/bin/encrypted-execution"
+ENV PHP_SRC_PATH "/usr/src/php"
+WORKDIR $ENCRYPTED_EXECUTION_PATH
+COPY --from=builder /encrypted-execution/ ./
+
 RUN set -eux; \
 	\
 	savedAptMark="$(apt-mark showmanual)"; \
@@ -172,6 +184,7 @@ RUN set -eux; \
 		libssl-dev \
 		libxml2-dev \
 		zlib1g-dev \
+		${PHP_EXTRA_BUILD_DEPS:-} \
 	; \
 	\
 	export \
@@ -228,12 +241,16 @@ RUN set -eux; \
 # in PHP 7.4+, the pecl/pear installers are officially deprecated (requiring an explicit "--with-pear")
 		--with-pear \
 		\
+		PHP_EXTRA_VERSION="-encrypted" \
+		\
 		--with-libdir="lib/$debMultiarch" \
 		\
 		--disable-cgi \
 		\
 		--with-apxs2 \
+		${PHP_EXTRA_CONFIGURE_ARGS:-} \
 	; \
+	$ENCRYPTED_EXECUTION_PATH/encrypted-execution-enable; \
 	make -j "$(nproc)"; \
 	find -type f -name '*.a' -delete; \
 	make install; \
