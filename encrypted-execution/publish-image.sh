@@ -5,7 +5,9 @@ set -e
 image="ghcr.io/encrypted-execution/php-encrypted-execution-builder"
 
 echo "$(date) Obtaining current git sha for tagging the docker image"
-headsha=$(git rev-parse --verify HEAD)
+if [[ "$headsha" == "" ]]; then
+	headsha=$(git rev-parse --verify HEAD)
+fi
 
 docker build -t $image:$headsha .
 

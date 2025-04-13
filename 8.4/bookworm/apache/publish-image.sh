@@ -6,8 +6,9 @@ PHP_VERSION=8.4
 image="ghcr.io/encrypted-execution/encrypted-php${PHP_VERSION}-apache-debian"
 
 echo "$(date) Obtaining current git sha for tagging the docker image"
-headsha=$(git rev-parse --verify HEAD)
-
+if [[ "$headsha" == "" ]]; then
+    headsha=$(git rev-parse --verify HEAD)
+fi
 
 docker build -t $image:$headsha .
 echo "Pushing with commit tag..."

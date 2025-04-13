@@ -25,22 +25,24 @@ jobs:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: List 8.4 Apache on Debian Bookworm contents
-        run: ls -trla
-        shell: bash
-        working-directory: ./8.4/bookworm/apache/
       - name: Build
         run: ./publish-image.sh -g
         shell: bash
         working-directory: ./8.4/bookworm/apache/
+        env:
+          headsha: ${{ github.sha }}
       - name: Run Test Suite
         run: ./workflow-test.sh
         shell: bash
         working-directory: ./encrypted-execution/tools/test/
+        env:
+          headsha: ${{ github.sha }}
 #      - name: Publish 8.4 Apache Git Package Repository
 #        run: ./publish-image.sh -g
 #        shell: bash
 #        working-directory: ./8.4/bookworm/apache/
+#        env:
+#          headsha: ${{ github.sha }}
 #      - name: Trigger Downstream
 #        run: |
 #             curl \

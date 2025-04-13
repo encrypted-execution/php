@@ -7,9 +7,13 @@ git_root=`git rev-parse --show-toplevel`
 trap "docker stop $container" EXIT 
 echo $image
 
+if [[ "$headsha" == "" ]]; then
+    headsha=$(git rev-parse --verify HEAD)
+fi
+
 echo "Pulling test image..."
 echo "Running image"
-docker run --rm --name "$container" -tid "$image:$git_root" bash
+docker run --rm --name "$container" -tid "$image:$headsha" bash
 docker exec -w $encrypted_execution_dir $container $encrypted_execution_dir/build-scrambled.sh
 echo "copying test"
 docker cp $git_root/encrypted-execution/tools/test/ $container:$encrypted_execution_dir
