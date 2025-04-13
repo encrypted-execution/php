@@ -164,8 +164,8 @@ RUN set -eux; \
 COPY docker-php-source /usr/local/bin/
 
 #add encryption
-ENV ENCRYPTED_EXECUTION_PATH "/usr/local/bin/encrypted-execution"
-ENV PHP_SRC_PATH "/usr/src/php"
+ENV ENCRYPTED_EXECUTION_PATH="/usr/local/bin/encrypted-execution"
+ENV PHP_SRC_PATH="/usr/src/php"
 WORKDIR $ENCRYPTED_EXECUTION_PATH
 COPY --from=builder /encrypted-execution/ ./
 

@@ -12,9 +12,6 @@ if [ -d /usr/src/php ]; then
 	srcExists=1
 fi
 docker-php-source extract
-if [ -z "$srcExists" ]; then
-	touch /usr/src/php/.docker-delete-me
-fi
 
 cd /usr/src/php/ext
 
@@ -136,8 +133,4 @@ done
 
 if [ "$pm" = 'apk' ] && [ -n "$apkDel" ]; then
 	apk del --no-network $apkDel
-fi
-
-if [ -e /usr/src/php/.docker-delete-me ]; then
-	docker-php-source delete
 fi

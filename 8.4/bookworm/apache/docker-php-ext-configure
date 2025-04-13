@@ -12,9 +12,6 @@ if [ -d /usr/src/php ]; then
 	srcExists=1
 fi
 docker-php-source extract
-if [ -z "$srcExists" ]; then
-	touch /usr/src/php/.docker-delete-me
-fi
 
 cd /usr/src/php/ext
 
