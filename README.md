@@ -1,7 +1,7 @@
 
 [![Publish Encrypted Execution Tools](https://github.com/encrypted-execution/php/actions/workflows/build-tools-publish.yml/badge.svg)](https://github.com/encrypted-execution/php/actions/workflows/build-tools-publish.yml)
 
-[![Publish 8.0 Apache](https://github.com/encrypted-execution/php/actions/workflows/8.0-apache-publish.yml/badge.svg)](https://github.com/encrypted-execution/php/actions/workflows/8.4-apache-publish.yml)
+[![Publish 8.4 Apache on Debian Bookworm](https://github.com/encrypted-execution/php/actions/workflows/8.4-apache-publish.yml/badge.svg)](https://github.com/encrypted-execution/php/actions/workflows/8.4-apache-publish.yml)
 
 # Encrypted Execution PHP
 
