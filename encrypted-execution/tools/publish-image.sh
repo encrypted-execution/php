@@ -5,7 +5,7 @@ set -e
 type="$(basename $PWD)"
 build="$(basename $(dirname $PWD))"
 php_ver="$(basename $(dirname $(dirname $PWD)))"
-image="polyverse/ps-php${php_ver}-${build}-${type}"
+image="ghcr.io/encrypted-execution/ee-php${php_ver}-${build}-${type}"
 
 echo "Image $image being built"
 

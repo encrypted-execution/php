@@ -23,7 +23,7 @@ $dictionary_path=null;
 arg_parse(getopt("s:p:d:", $long_opts));
 
 if ($is_snip ) {
-    echo poly_snip($out, $is_test, $dictionary_path);
+    echo ee_snip($out, $is_test, $dictionary_path);
     return;
 }
 
@@ -134,7 +134,7 @@ function encrypt($file_name, $fileOut)
     global $is_test, $dictionary_path;
     $file_str = file_get_contents($file_name);
     $fp = fopen($fileOut, 'w');
-    fwrite($fp, poly_snip($file_str, $is_test, $dictionary_path));
+    fwrite($fp, ee_snip($file_str, $is_test, $dictionary_path));
     fclose($fp);
 }
 

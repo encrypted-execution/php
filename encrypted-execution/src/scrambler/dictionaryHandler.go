@@ -33,34 +33,34 @@ var KeywordsRegex = regexp.MustCompile( //REGEX found as user @martindilling com
 		"(break|list|(x)?or|var|while)|" +
 		"(string|object|list|int(eger)?|real|float|[^_]AND|[^(R|_|F)(X)?)](X)?OR))[^a-zA-Z0-9]")
 
-var PolyWords = make(map[string]string)
+var EEWords = make(map[string]string)
 var SpecialChar = make(map[string]string)
 var PreMadeDict = false
 
-func InitPolyWords(filename string) {
+func InitEEWords(filename string) {
 	PreMadeDict = true
 	file, _ := ioutil.ReadFile(filename)
-	err := json.Unmarshal(file, &PolyWords)
+	err := json.Unmarshal(file, &EEWords)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Print(PolyWords)
+	fmt.Print(EEWords)
 	InitChar()
 }
 
-func AddToPolyWords(key string) bool {
+func AddToEEWords(key string) bool {
 	var ok bool
-	if _, ok = PolyWords[key]; ok {
+	if _, ok = EEWords[key]; ok {
 		return false
 	} else {
-		PolyWords[key] = randomStringGen() // (need checks here?)
+		EEWords[key] = randomStringGen() // (need checks here?)
 		return true
 	}
 }
 
 func GetScrambled(key string) (string, bool) {
-	if _, ok := PolyWords[key]; ok {
-		return PolyWords[key], true
+	if _, ok := EEWords[key]; ok {
+		return EEWords[key], true
 	} else {
 		return key, false
 	}
@@ -91,7 +91,7 @@ func SerializeMap() {
 		panic(err)
 	}
 
-	m, err := json.Marshal(PolyWords)
+	m, err := json.Marshal(EEWords)
 	Check(err)
 
 	_, err = encodeFile.Write(m)
@@ -129,7 +129,7 @@ func InitChar() {
 	}
 
 	for _, char := range specialChars {
-		out := PolyWords[char]
+		out := EEWords[char]
 		if char == "]" {
 			char = "\\]"
 		}
@@ -149,10 +149,10 @@ func permutationGen() {
 	permutation := shuffle()
 
 	for _, char := range symbolChars {
-		PolyWords[char], permutation = permutation[0], permutation[1:]
+		EEWords[char], permutation = permutation[0], permutation[1:]
 	}
 
-	if PolyWords["("] == "]" || PolyWords[")"] == "]" {
+	if EEWords["("] == "]" || EEWords[")"] == "]" {
 		permutationGen()
 	}
 	return

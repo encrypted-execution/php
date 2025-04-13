@@ -11,7 +11,7 @@ const IGNORE = array(T_STRING, T_INLINE_HTML, T_CONSTANT_ENCAPSED_STRING, T_STAR
     T_OPEN_TAG_WITH_ECHO);
 
 const DICTIONARY = "/scrambled.json";
-const POLY_PATH = "ENCRYPTED_EXECUTION_PATH";
+const ENCRYPTED_EXECUTION_PATH = "ENCRYPTED_EXECUTION_PATH";
 
 $GLOBALS["keys_ps_map"] = [];
 
@@ -23,7 +23,7 @@ class String_State
 
 $str_state = new String_State();
 
-function poly_snip($snip, $is_test, $dictionary_path = null)
+function ee_snip($snip, $is_test, $dictionary_path = null)
 {
     global $custom_dictionary;
     if ($dictionary_path != null) {
@@ -180,7 +180,7 @@ function get_dir()
         return;
     }
 
-    $parent = getenv(POLY_PATH);
+    $parent = getenv(ENCRYPTED_EXECUTION_PATH);
     if ($parent == "") {
         $parent = ".";
         echo "Encryption dictionary not found. Looking for scrambled.json in current directory.";
