@@ -1,0 +1,12 @@
+#!/bin/bash
+# Copyright (c) 2020 Polyverse Corporation
+
+sed -i '/^PHP_EXTRA_VERSION/s/"$/-poly"/' configure configure.ac Makefile
+sed -i '/PHP_EXTRA_VERSION/s/""/"-poly"/' main/php_version.h
+sed -i '/PHP_VERSION "/s/"$/-poly"/' main/php_version.h
+
+make -j "$(nproc)"
+find -type f -name '*.a' -delete
+make install -j $(nproc)
+
+rm "$ENCRYPTED_EXECUTION_PATH"/polyscript-enable

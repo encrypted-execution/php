@@ -14,7 +14,9 @@ if [ "$#" -eq 0 ]; then
 fi
 
 # sort version numbers with highest first
-IFS=$'\n'; set -- $(sort -rV <<<"$*"); unset IFS
+IFS=$'\n'
+set -- $(sort -rV <<<"$*")
+unset IFS
 
 # get the most recent commit which modified any of "$@"
 fileCommit() {
@@ -23,7 +25,8 @@ fileCommit() {
 
 # get the most recent commit which modified "$1/Dockerfile" or any file COPY'd from "$1/Dockerfile"
 dirCommit() {
-	local dir="$1"; shift
+	local dir="$1"
+	shift
 	(
 		cd "$dir"
 		fileCommit \
@@ -57,17 +60,19 @@ getArches() {
 getArches 'php'
 
 cat <<-EOH
-# this file is generated via https://github.com/docker-library/php/blob/$(fileCommit "$self")/$self
+	# this file is generated via https://github.com/docker-library/php/blob/$(fileCommit "$self")/$self
 
-Maintainers: Tianon Gravi <admwiggin@gmail.com> (@tianon),
-             Joseph Ferguson <yosifkit@gmail.com> (@yosifkit)
-GitRepo: https://github.com/docker-library/php.git
+	Maintainers: Tianon Gravi <admwiggin@gmail.com> (@tianon),
+	             Joseph Ferguson <yosifkit@gmail.com> (@yosifkit)
+	GitRepo: https://github.com/docker-library/php.git
 EOH
 
 # prints "$2$1$3$1...$N"
 join() {
-	local sep="$1"; shift
-	local out; printf -v out "${sep//%/%%}%s" "$@"
+	local sep="$1"
+	shift
+	local out
+	printf -v out "${sep//%/%%}%s" "$@"
 	echo "${out#$sep}"
 }
 
@@ -120,7 +125,7 @@ for version; do
 	' versions.json)"
 
 	for dir in "${variants[@]}"; do
-		suite="$(dirname "$dir")" # "buster", etc
+		suite="$(dirname "$dir")"    # "buster", etc
 		variant="$(basename "$dir")" # "cli", etc
 		dir="$version/$dir"
 		[ -f "$dir/Dockerfile" ] || continue
@@ -138,8 +143,8 @@ for version; do
 		elif [ "$suite" != "$defaultDebianVariant" ]; then
 			variantAliases=()
 		fi
-		variantAliases=( "${suiteVariantAliases[@]}" ${variantAliases[@]+"${variantAliases[@]}"} )
-		variantAliases=( "${variantAliases[@]//latest-/}" )
+		variantAliases=("${suiteVariantAliases[@]}" ${variantAliases[@]+"${variantAliases[@]}"})
+		variantAliases=("${variantAliases[@]//latest-/}")
 
 		variantParent="$(awk 'toupper($1) == "FROM" { print $2 }' "$dir/Dockerfile")"
 		variantArches="${parentRepoToArches[$variantParent]}"

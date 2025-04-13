@@ -13,6 +13,14 @@ fi
 versions=( "${versions[@]%/}" )
 
 for version in "${versions[@]}"; do
+	# Versions begin with a digit
+	if ! [[ $version =~ [0-9].* ]]; then
+		echo "Ignoring directory $version, since versions must begin with a digit."
+		continue
+	fi
+
+	echo "Looking up php at version $version..."
+
 	rcVersion="${version%-rc}"
 	export version rcVersion
 

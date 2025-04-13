@@ -12,11 +12,11 @@ usage() {
 	echo
 	echo 'Possible values for module-name:'
 	find -maxdepth 1 \
-			-type f \
-			-name '*.so' \
-			-exec basename '{}' ';' \
-		| sort \
-		| xargs
+		-type f \
+		-name '*.so' \
+		-exec basename '{}' ';' |
+		sort |
+		xargs
 	echo
 	echo 'Some of the above modules are already compiled into PHP; please check'
 	echo 'the output of "php -i" to see which modules are already loaded.'
@@ -30,16 +30,16 @@ while true; do
 	flag="$1"
 	shift
 	case "$flag" in
-		--help|-h|'-?') usage && exit 0 ;;
-		--ini-name) iniName="$1" && shift ;;
-		--) break ;;
-		*)
-			{
-				echo "error: unknown flag: $flag"
-				usage
-			} >&2
-			exit 1
-			;;
+	--help | -h | '-?') usage && exit 0 ;;
+	--ini-name) iniName="$1" && shift ;;
+	--) break ;;
+	*)
+		{
+			echo "error: unknown flag: $flag"
+			usage
+		} >&2
+		exit 1
+		;;
 	esac
 done
 
@@ -69,11 +69,12 @@ fi
 
 apkDel=
 if [ "$pm" = 'apk' ]; then
-	if \
-		[ -n "$PHPIZE_DEPS" ] \
-		&& ! apk info --installed .phpize-deps > /dev/null \
-		&& ! apk info --installed .phpize-deps-configure > /dev/null \
-	; then
+	if
+		[ -n "$PHPIZE_DEPS" ] &&
+			! apk info --installed .phpize-deps >/dev/null &&
+			! apk info --installed .phpize-deps-configure >/dev/null \
+			;
+	then
 		apk add --no-cache --virtual '.docker-php-ext-enable-deps' binutils
 		apkDel='.docker-php-ext-enable-deps'
 	fi
@@ -103,16 +104,16 @@ for module in $modules; do
 	fi
 
 	case "$iniName" in
-		/*)
-			# allow an absolute path
-			ini="$iniName"
-			;;
-		*)
-			ini="$PHP_INI_DIR/conf.d/${iniName:-"docker-php-ext-$ext.ini"}"
-			;;
+	/*)
+		# allow an absolute path
+		ini="$iniName"
+		;;
+	*)
+		ini="$PHP_INI_DIR/conf.d/${iniName:-"docker-php-ext-$ext.ini"}"
+		;;
 	esac
 	if ! grep -qFx -e "$line" -e "$line.so" "$ini" 2>/dev/null; then
-		echo "$line" >> "$ini"
+		echo "$line" >>"$ini"
 	fi
 done
 

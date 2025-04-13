@@ -1,0 +1,20 @@
+name: Publish Encrypted Execution Tools
+on: 
+  push:
+    branches:
+     - main
+jobs:
+    build:
+      runs-on: ubuntu-latest
+      steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GHCR_PUBLISH_PERSONAL_ACCESS_TOKEN }}
+      - name: Publish Encrypted Execution Tools Git Package Repository
+        run: ./publish-image.sh -g
+        shell: bash
+        working-directory: ./encrypted-execution/
