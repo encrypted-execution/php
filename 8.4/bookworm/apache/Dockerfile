@@ -1,4 +1,4 @@
-FROM ghcr.io/encrypted-execution/php-encrypted-execution-builder:latest as builder
+FROM ghcr.io/encrypted-execution/php-encrypted-execution-builder:latest AS builder
 
 #
 # NOTE: THIS DOCKERFILE IS GENERATED VIA "apply-templates.sh"
@@ -19,7 +19,7 @@ RUN set -eux; \
 
 # dependencies required for running "phpize"
 # (see persistent deps below)
-ENV PHPIZE_DEPS \
+ENV PHPIZE_DEPS="\
 		autoconf \
 		dpkg-dev \
 		file \
@@ -28,7 +28,7 @@ ENV PHPIZE_DEPS \
 		libc-dev \
 		make \
 		pkg-config \
-		re2c
+		re2c"
 
 # persistent / runtime deps
 RUN set -eux; \
@@ -41,7 +41,7 @@ RUN set -eux; \
 	; \
 	rm -rf /var/lib/apt/lists/*
 
-ENV PHP_INI_DIR /usr/local/etc/php
+ENV PHP_INI_DIR=/usr/local/etc/php
 RUN set -eux; \
 	mkdir -p "$PHP_INI_DIR/conf.d"; \
 # allow running as an arbitrary user (https://github.com/docker-library/php/issues/743)
@@ -50,8 +50,8 @@ RUN set -eux; \
 	chown www-data:www-data /var/www/html; \
 	chmod 1777 /var/www/html
 
-ENV APACHE_CONFDIR /etc/apache2
-ENV APACHE_ENVVARS $APACHE_CONFDIR/envvars
+ENV APACHE_CONFDIR=/etc/apache2
+ENV APACHE_ENVVARS=$APACHE_CONFDIR/envvars
 
 RUN set -eux; \
 	apt-get update; \
@@ -111,8 +111,8 @@ RUN { \
 	&& a2enconf docker-php
 
 
-ENV PHP_EXTRA_BUILD_DEPS apache2-dev
-ENV PHP_EXTRA_CONFIGURE_ARGS --with-apxs2 --disable-cgi PHP_EXTRA_VERSION="-encrypted"
+ENV PHP_EXTRA_BUILD_DEPS=apache2-dev
+ENV PHP_EXTRA_CONFIGURE_ARGS="--with-apxs2 --disable-cgi"
 
 # Apply stack smash protection to functions using local buffers and alloca()
 # Make PHP's main executable position-independent (improves ASLR security mechanism, and has no performance impact on x86_64)
@@ -124,9 +124,9 @@ ENV PHP_CFLAGS="-fstack-protector-strong -fpic -fpie -O2 -D_LARGEFILE_SOURCE -D_
 ENV PHP_CPPFLAGS="$PHP_CFLAGS"
 ENV PHP_LDFLAGS="-Wl,-O1 -pie"
 
-ENV GPG_KEYS AFD8691FDAEDF03BDF6E460563F15A9B715376CA 9D7F99A0CB8F05C8A6958D6256A97AF7600A39A6 0616E93D95AF471243E26761770426E17EBBB3DD
+ENV GPG_KEYS="AFD8691FDAEDF03BDF6E460563F15A9B715376CA 9D7F99A0CB8F05C8A6958D6256A97AF7600A39A6 0616E93D95AF471243E26761770426E17EBBB3DD"
 
-ENV PHP_VERSION 8.4.6-encrypted
+ENV PHP_VERSION=8.4.6-encrypted
 ENV PHP_URL="https://www.php.net/distributions/php-8.4.6.tar.xz" PHP_ASC_URL="https://www.php.net/distributions/php-8.4.6.tar.xz.asc"
 ENV PHP_SHA256="089b08a5efef02313483325f3bacd8c4fe311cf1e1e56749d5cc7d059e225631"
 
@@ -262,30 +262,13 @@ RUN set -eux; \
 			strip --strip-all "$@" || : \
 		' -- '{}' + \
 	; \
-	make clean; \
 	\
 # https://github.com/docker-library/php/issues/692 (copy default example "php.ini" files somewhere easily discoverable)
 	cp -v php.ini-* "$PHP_INI_DIR/"; \
 	\
 	cd /; \
 	\
-# reset apt-mark's "manual" list so that "purge --auto-remove" will remove all build dependencies
-	apt-mark auto '.*' > /dev/null; \
-	[ -z "$savedAptMark" ] || apt-mark manual $savedAptMark; \
-	find /usr/local -type f -executable -exec ldd '{}' ';' \
-		| awk '/=>/ { so = $(NF-1); if (index(so, "/usr/local/") == 1) { next }; gsub("^/(usr/)?", "", so); printf "*%s\n", so }' \
-		| sort -u \
-		| xargs -r dpkg-query --search \
-		| cut -d: -f1 \
-		| sort -u \
-		| xargs -r apt-mark manual \
-	; \
-	apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false; \
-	rm -rf /var/lib/apt/lists/*; \
-	\
-# update pecl channel definitions https://github.com/docker-library/php/issues/443
 	pecl update-channels; \
-	rm -rf /tmp/pear ~/.pearrc; \
 	\
 # smoke test
 	php --version

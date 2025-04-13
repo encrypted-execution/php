@@ -36,9 +36,9 @@ if [ -f $PHP_SRC_PATH/ext/phar/build_precommand.php ]; then
      $PHP_EXEC/s_php tok-php-transformer.php -p ./build_precommand.php --replace
      mv ./build_precommand.php $PHP_SRC_PATH/ext/phar/build_precommand.php
 else
-     echo "NO SUCH FILE at scramble time: $PHP_SRC_PATH/ext/phar/phar.php"
+     echo "NO SUCH FILE at scramble time: $PHP_SRC_PATH/ext/phar/build_precommand.php"
 fi
 
 cd $PHP_SRC_PATH
-make -j 1 -o ext/phar/phar.php install -k
+make -j "$(nproc)" -o ext/phar/phar.php install -k
 cd $ENCRYPTED_EXECUTION_PATH
