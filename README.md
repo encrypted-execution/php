@@ -25,6 +25,10 @@ More documentation coming soon.
     * Right after building full-php, run the encrypter so that the Zend parser is scrambled
     * Rebuild. The incremental build should be fast (this is how we live-reencrypt running code so fast.)
 
+# Wordpress
+
+Follow the [Encrypted Wordpress](https://github.com/encrypted-execution/wordpress) repository for pre-built wordpress running on Encrypted Execution PHP.
+
 # License
 
 All modifications, patches, changes: when not automatically applicable under The PHP License for whatever reason, are granted under the Apache 2.0 License.
