@@ -20,6 +20,11 @@ jobs:
       steps:
       - name: Checkout
         uses: actions/checkout@v1
+      - uses: docker/login-action@v1
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
       - name: List 8.4 Apache on Debian Bookworm contents
         run: ls -trla
         shell: bash
@@ -31,11 +36,6 @@ jobs:
       - name: Run Test Suite
         run: ./workflow-test.sh
         working-directory: ./encrypted-execution/tools/test/
-      - uses: docker/login-action@v1
-        with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
       - name: Publish 8.4 Apache Git Package Repository
         run: ./publish-image.sh -p
         shell: bash
